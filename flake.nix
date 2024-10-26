@@ -32,7 +32,7 @@
         python3
       ];
       packageParams = {
-        inherit buildInputs;
+        nativeBuildInputs = buildInputs;
         src = ./.;
       };
     in
@@ -48,9 +48,9 @@
       #  installPhase = "";
       #};
       defaultPackage.${system} = pkgs.runCommand "visua-web" packageParams ''
-        echo RUFF!!
-        ls
-        emcc ./src/main.cpp -o $out/woof.html
+        export HOME=$(mktemp -d)
+        mkdir -p $out
+        emcc $src/src/main.cpp -o $out/woof.html
       '';
 
       devShell.${system} = pkgs.mkShell {
