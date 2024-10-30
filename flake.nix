@@ -52,7 +52,8 @@
       defaultPackage.${system} = pkgs.runCommand "visua-web" packageParams ''
         export HOME=$(mktemp -d)
         mkdir -p $out
-        emcc $src/src/main.cpp -o $out/woof.html
+        #emcc $src/src/main.cpp -o $out/woof.html
+        cp src/woof.html src/woof.js $out
       '';
 
       devShell.${system} = pkgs.mkShell {
