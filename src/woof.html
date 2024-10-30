@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <title>woof</title>
+
+    <script id="vert-shader" type="notjs">
+        attribute vec4 position;
+        void main() {
+            gl_Position = position;
+        }
+    </script>
+    <script id="frag-shader" type="notjs">
+        precision mediump float;
+        void main() {
+            gl_FragColor = vec4(1,0,0.5,1);
+        }
+    </script>
+    <script src="woof.js"></script>
+
+    <style>
+        canvas {
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    ruff!
+    <canvas id="canvas">webgl not found :(</canvas>
+</body>
+
+</html>

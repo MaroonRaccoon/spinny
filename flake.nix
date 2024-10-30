@@ -24,6 +24,8 @@
         # dev environment (clangd)
         clang-tools
         llvm.clang
+        nodePackages.typescript-language-server
+        nodePackages.vscode-langservers-extracted
         
         # libraries
         glibc_multi
@@ -58,6 +60,7 @@
           pkgs.pkg-config
         ];
         shellHook = ''
+          EMSCRIPTEN_ROOT=${pkgs.emscripten}
         '';
       };
     };
