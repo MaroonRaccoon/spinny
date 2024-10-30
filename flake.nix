@@ -53,7 +53,7 @@
         export HOME=$(mktemp -d)
         mkdir -p $out
         #emcc $src/src/main.cpp -o $out/woof.html
-        cp src/woof.html src/woof.js $out
+        cp $src/src/woof.html $src/src/woof.js $out
       '';
 
       devShell.${system} = pkgs.mkShell {
