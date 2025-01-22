@@ -5,28 +5,30 @@
 
     <script id="vert-shader" type="notjs">
         attribute vec4 position;
+        varying vec4 color;
         void main() {
             gl_Position = position;
+            color = 0.5*gl_Position + 0.5;
         }
     </script>
     <script id="frag-shader" type="notjs">
         precision mediump float;
+        varying vec4 color;
         void main() {
-            gl_FragColor = vec4(1,0,0.5,1);
+            gl_FragColor = color;
         }
     </script>
     <script src="woof.js"></script>
 
     <style>
         canvas {
-            width: 200px;
-            height: 200px;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 
 <body>
-    ruff!
     <canvas id="canvas">webgl not found :(</canvas>
 </body>
 
