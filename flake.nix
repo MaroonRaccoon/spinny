@@ -29,6 +29,7 @@
         
         # libraries
         glibc_multi
+        SDL2
 
         # python for gdb script
         python3
@@ -52,8 +53,11 @@
       defaultPackage.${system} = pkgs.runCommand "visua-web" packageParams ''
         export HOME=$(mktemp -d)
         mkdir -p $out
-        #emcc $src/src/main.cpp -o $out/woof.html
+        emcc $src/src/main.cpp -o $out/main.html
         cp $src/src/woof.html $src/src/woof.js $out
+
+        emcc -std=c++20 $src/src/hello_triangle_minimal.cpp -sUSE_SDL=2 -sWASM=1 -o $out/hello_triangle_minimal.js
+        #cp $src/src/hello_triangle_minimal.html $out
       '';
 
       devShell.${system} = pkgs.mkShell {
