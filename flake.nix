@@ -57,7 +57,8 @@
       #};
       defaultPackage.${system} = pkgs.runCommand "visua-web" packageParams ''
         export HOME=$(mktemp -d)
-        export EM_CACHE=$out/.emscripten_cache
+        export EM_CACHE=/tmp/.visua-emscripten_cache
+        rm -rf $EM_CACHE
         EM_PORTS=$EM_CACHE/ports
         export EMCC_LOCAL_PORTS="sdl2=${inputs.sdl}"
 
