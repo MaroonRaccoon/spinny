@@ -3,16 +3,30 @@ project(woof VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_VERBOSE_MAKEFILE on)
+set(OUTPUT_DIR ${CMAKE_BINARY_DIR}/out)
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 
-file(GLOB SOURCES src/*.cpp)
+file(GLOB SOURCES ${SRC_DIR}/*.cpp)
 
 add_executable(woof ${SOURCES})
+add_custom_command(
+    OUTPUT woof.html
+    COMMAND ${CMAKE_COMMAND} -E copy ${SRC_DIR}/woof.html ${OUTPUT_DIR}/woof.html
+    DEPENDS ${SRC_DIR}/woof.html
+)
+add_custom_target(
+    woof_html
+    DEPENDS woof.html
+)
+add_dependencies(woof woof_html)
+
+set_target_properties(woof
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}
+)
 target_compile_options(woof PRIVATE
     "-sUSE_SDL=2"
 )
-
-message( "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ARUFF sdl2=$ENV{SDL_ROOT}" )
-
 target_link_options(woof PRIVATE
     "--preload-file ${CMAKE_SOURCE_DIR}/res"
     "-sUSE_SDL=2"

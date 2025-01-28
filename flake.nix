@@ -65,6 +65,8 @@
       #  '';
       #  installPhase = "";
       #};
+
+      # TODO: use CMake and make for the nix bulid
       defaultPackage.${system} = pkgs.runCommand "visua-web" packageParams ''
         export HOME=$(mktemp -d)
         ${setEnvVariables}
