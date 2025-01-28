@@ -20,6 +20,11 @@
 #include <SDL2/SDL_opengles2.h>
 #endif
 
+#include <iostream>
+#include <vector>
+#include <string>
+
+// TODO: preload shader files into emscripten virtual file system rather than using strings
 // Vertex shader
 const GLchar* vertexSource =
     "attribute vec4 position;                      \n"
@@ -45,6 +50,17 @@ GLuint initShader()
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
     glCompileShader(vertexShader);
+
+    GLint vertCompileSuccess = GL_FALSE;
+    int vertLogLength;
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vertCompileSuccess);
+    glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &vertLogLength);
+    if (vertLogLength > 0) {
+        std::vector<char> errorMessage(vertLogLength + 1);
+        glGetShaderInfoLog(vertexShader, vertLogLength, NULL, errorMessage.data());
+        std::cerr << "Error message from vertex shader compilation:" << std::endl;
+        std::cerr << std::string(errorMessage.data()) << std::endl;
+    }
 
     // Create and compile fragment shader
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -113,14 +129,14 @@ int main(int argc, char** argv)
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GLContext glc = SDL_GL_CreateContext(pWindow);
-    printf("INFO: GL version: %s\n", glGetString(GL_VERSION));
+    std::cout << "INFO: GL version: " << glGetString(GL_VERSION) << std::endl;
 
     // Set clear color to black
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     
     // Get actual GL window size in pixels, in case of high dpi scaling
     SDL_GL_GetDrawableSize(pWindow, &winWidth, &winHeight);
-    printf("INFO: GL window size = %dx%d\n", winWidth, winHeight);
+    std::cout << "INFO: GL window size = " << winWidth << "x" << winHeight << std::endl;
     glViewport(0, 0, winWidth, winHeight);   
 
     // Initialize shader and geometry

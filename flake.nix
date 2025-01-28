@@ -31,6 +31,7 @@
         llvm.clang
         nodePackages.typescript-language-server
         nodePackages.vscode-langservers-extracted
+        glsl_analyzer
         
         # libraries
         glibc_multi
@@ -43,6 +44,15 @@
         nativeBuildInputs = buildInputs;
         src = ./.;
       };
+      setEnvVariables = ''
+        export EMSCRIPTEN_ROOT=${pkgs.emscripten}
+        export SDL_ROOT=${inputs.sdl}
+
+        export EM_CACHE=/tmp/.visua-emscripten_cache
+        export EMCC_LOCAL_PORTS="sdl2=$SDL_ROOT"
+
+        rm -rf EM_CACHE
+      '';
     in
     {
       #defaultPackage.${system} = pkgs.stdenv.mkDerivation {
@@ -57,10 +67,7 @@
       #};
       defaultPackage.${system} = pkgs.runCommand "visua-web" packageParams ''
         export HOME=$(mktemp -d)
-        export EM_CACHE=/tmp/.visua-emscripten_cache
-        rm -rf $EM_CACHE
-        EM_PORTS=$EM_CACHE/ports
-        export EMCC_LOCAL_PORTS="sdl2=${inputs.sdl}"
+        ${setEnvVariables}
 
         mkdir -p $out
         emcc $src/src/main.cpp -o $out/main.html
@@ -75,7 +82,7 @@
           pkgs.pkg-config
         ];
         shellHook = ''
-          EMSCRIPTEN_ROOT=${pkgs.emscripten}
+          ${setEnvVariables}
         '';
       };
     };
