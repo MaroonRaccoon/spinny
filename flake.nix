@@ -55,28 +55,15 @@
       '';
     in
     {
-      #defaultPackage.${system} = pkgs.stdenv.mkDerivation {
-      #  name = "visua-web";
-      #  inherit buildInputs;
-      #  src = ./.;
-      #  configurePhase = "";
-      #  buildPhase = ''
-      #    emcc src/main.cpp -o $out/woof.html
-      #  '';
-      #  installPhase = "";
-      #};
-
-      # TODO: use CMake and make for the nix bulid
       defaultPackage.${system} = pkgs.runCommand "visua-web" packageParams ''
         export HOME=$(mktemp -d)
         ${setEnvVariables}
 
-        mkdir -p $out
-        emcc $src/src/main.cpp -o $out/main.html
-        cp $src/src/woof.html $src/src/woof.js $out
+        $src/configure.sh $src
+        make
 
-        emcc -std=c++20 $src/src/hello_triangle_minimal.cpp -sUSE_SDL=2 -sWASM=1 -o $out/hello_triangle_minimal.js
-        cp $src/src/hello_triangle_minimal.html $out
+        mkdir -p $out
+        cp out/* $out
       '';
 
       devShell.${system} = pkgs.mkShell {
