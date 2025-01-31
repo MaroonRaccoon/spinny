@@ -26,25 +26,6 @@
 #include <vector>
 #include <string>
 
-//// Vertex shader
-//const GLchar* vertexSource =
-//    "attribute vec4 position;                      \n"
-//    "varying vec3 color;                           \n"
-//    "void main()                                   \n"
-//    "{                                             \n"
-//    "    gl_Position = vec4(position.xyz, 1.0);    \n"
-//    "    color = gl_Position.xyz + vec3(0.5);      \n"
-//    "}                                             \n";
-//
-//// Fragment/pixel shader
-//const GLchar* fragmentSource =
-//    "precision mediump float;                     \n"
-//    "varying vec3 color;                          \n"
-//    "void main()                                  \n"
-//    "{                                            \n"
-//    "    gl_FragColor = vec4 ( color, 1.0 );      \n"
-//    "}                                            \n";
-
 std::string readFile(std::string path)
 {
     std::fstream in(path, std::ios::in);
