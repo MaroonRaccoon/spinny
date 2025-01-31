@@ -28,6 +28,9 @@ target_compile_options(woof PRIVATE
     "-sUSE_SDL=2"
 )
 target_link_options(woof PRIVATE
-    "--preload-file ${CMAKE_SOURCE_DIR}/res"
+    "--embed-file ${CMAKE_SOURCE_DIR}/res/shaders@/hello_triangle.vert"
+    "--embed-file ${CMAKE_SOURCE_DIR}/res/shaders@/hello_triangle.frag"
+    "--embed-file somefile.txt"
+    "-sNO_DISABLE_EXCEPTION_CATCHING"
     "-sUSE_SDL=2"
 )

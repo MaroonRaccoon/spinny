@@ -21,31 +21,73 @@
 #endif
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <vector>
 #include <string>
+#include <filesystem>
+namespace fs = std::filesystem;
 
-// TODO: preload shader files into emscripten virtual file system rather than using strings
-// Vertex shader
-const GLchar* vertexSource =
-    "attribute vec4 position;                      \n"
-    "varying vec3 color;                           \n"
-    "void main()                                   \n"
-    "{                                             \n"
-    "    gl_Position = vec4(position.xyz, 1.0);    \n"
-    "    color = gl_Position.xyz + vec3(0.5);      \n"
-    "}                                             \n";
+//// Vertex shader
+//const GLchar* vertexSource =
+//    "attribute vec4 position;                      \n"
+//    "varying vec3 color;                           \n"
+//    "void main()                                   \n"
+//    "{                                             \n"
+//    "    gl_Position = vec4(position.xyz, 1.0);    \n"
+//    "    color = gl_Position.xyz + vec3(0.5);      \n"
+//    "}                                             \n";
+//
+//// Fragment/pixel shader
+//const GLchar* fragmentSource =
+//    "precision mediump float;                     \n"
+//    "varying vec3 color;                          \n"
+//    "void main()                                  \n"
+//    "{                                            \n"
+//    "    gl_FragColor = vec4 ( color, 1.0 );      \n"
+//    "}                                            \n";
 
-// Fragment/pixel shader
-const GLchar* fragmentSource =
-    "precision mediump float;                     \n"
-    "varying vec3 color;                          \n"
-    "void main()                                  \n"
-    "{                                            \n"
-    "    gl_FragColor = vec4 ( color, 1.0 );      \n"
-    "}                                            \n";
+
+#include <assert.h>
+#include <stdio.h>
+int main() {
+    printf("chrrarf");
+    FILE *f = fopen("somefile.txt", "r");
+    if (f) printf("f exists\n");
+    else printf("grrr");
+    char buf[100];
+    int rtn = fread(buf, 1, 21, f);
+    printf("rtn is %d\n", rtn);
+    buf[21] = 0;
+    fclose(f);
+    printf("|%s|\n", buf);
+    return 0;
+}
+
+
+
+std::string readFile(std::string path)
+{
+    std::fstream in(path, std::ios::in);
+    if (in.fail()) throw std::runtime_error("File not found: " + path);
+    std::stringstream buf;
+    buf << in.rdbuf();
+    return buf.str();
+}
 
 GLuint initShader()
 {
+    std::cout << "files:" << std::endl;
+    std::string path = "/";
+    for (const auto & entry : fs::directory_iterator(path))
+        std::cout << entry.path() << std::endl;
+    // read in shader code
+    std::string vertexSourceString = readFile("/hello_triangle.vert");
+    std::string fragmentSourceString = readFile("/hello_triangle.frag");
+
+    GLchar *vertexSource = vertexSourceString.data();
+    GLchar *fragmentSource = fragmentSourceString.data();
+
     // Create and compile vertex shader
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
@@ -111,7 +153,7 @@ void mainLoop(void* mainLoopArg)
     SDL_GL_SwapWindow(pWindow);
 }
 
-int main(int argc, char** argv)
+int emain(int argc, char** argv)
 {
     int winWidth = 512, winHeight = 512;
 
