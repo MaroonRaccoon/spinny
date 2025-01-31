@@ -59,8 +59,8 @@
         export HOME=$(mktemp -d)
         ${setEnvVariables}
 
-        $src/configure.sh $src
-        make
+        emcmake cmake $src
+        emmake make
 
         mkdir -p $out
         cp out/* $out

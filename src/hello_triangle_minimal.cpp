@@ -25,8 +25,6 @@
 #include <sstream>
 #include <vector>
 #include <string>
-#include <filesystem>
-namespace fs = std::filesystem;
 
 //// Vertex shader
 //const GLchar* vertexSource =
@@ -47,25 +45,6 @@ namespace fs = std::filesystem;
 //    "    gl_FragColor = vec4 ( color, 1.0 );      \n"
 //    "}                                            \n";
 
-
-#include <assert.h>
-#include <stdio.h>
-int main() {
-    printf("chrrarf");
-    FILE *f = fopen("somefile.txt", "r");
-    if (f) printf("f exists\n");
-    else printf("grrr");
-    char buf[100];
-    int rtn = fread(buf, 1, 21, f);
-    printf("rtn is %d\n", rtn);
-    buf[21] = 0;
-    fclose(f);
-    printf("|%s|\n", buf);
-    return 0;
-}
-
-
-
 std::string readFile(std::string path)
 {
     std::fstream in(path, std::ios::in);
@@ -77,13 +56,9 @@ std::string readFile(std::string path)
 
 GLuint initShader()
 {
-    std::cout << "files:" << std::endl;
-    std::string path = "/";
-    for (const auto & entry : fs::directory_iterator(path))
-        std::cout << entry.path() << std::endl;
     // read in shader code
-    std::string vertexSourceString = readFile("/hello_triangle.vert");
-    std::string fragmentSourceString = readFile("/hello_triangle.frag");
+    std::string vertexSourceString = readFile("/res/shaders/hello_triangle.vert");
+    std::string fragmentSourceString = readFile("/res/shaders/hello_triangle.frag");
 
     GLchar *vertexSource = vertexSourceString.data();
     GLchar *fragmentSource = fragmentSourceString.data();
@@ -153,7 +128,7 @@ void mainLoop(void* mainLoopArg)
     SDL_GL_SwapWindow(pWindow);
 }
 
-int emain(int argc, char** argv)
+int main(int argc, char** argv)
 {
     int winWidth = 512, winHeight = 512;
 

@@ -5,4 +5,5 @@ void main()
 {
     gl_Position = vec4(position.xyz, 1.0);
     color = gl_Position.xyz + vec3(0.5);  
+    //color = vec3(1.0);
 }
