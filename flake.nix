@@ -1,5 +1,5 @@
 {
-  description = "visua-web";
+  description = "spinny";
 
   inputs = {
       nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -46,16 +46,15 @@
       };
       setEnvVariables = ''
         export EMSCRIPTEN_ROOT=${pkgs.emscripten}
-        export SDL_ROOT=${inputs.sdl}
 
-        export EM_CACHE=/tmp/.visua-emscripten_cache
-        export EMCC_LOCAL_PORTS="sdl2=$SDL_ROOT"
+        export EM_CACHE=/tmp/.spinny-emscripten-cache
+        export EMCC_LOCAL_PORTS="sdl2=${inputs.sdl}"
 
         rm -rf EM_CACHE
       '';
     in
     {
-      defaultPackage.${system} = pkgs.runCommand "visua-web" packageParams ''
+      defaultPackage.${system} = pkgs.runCommand "spinny" packageParams ''
         export HOME=$(mktemp -d)
         ${setEnvVariables}
 

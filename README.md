@@ -1,4 +1,4 @@
-# visua-web
+# spinny
 
 ### Running locally
 To run locally: 

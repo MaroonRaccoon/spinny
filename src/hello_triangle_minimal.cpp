@@ -1,23 +1,8 @@
-//
-// SDL2/OpenGLES2 minimal sample that draws a triangle with shaders, all code in one file, no user input.
-//
-// Setup:
-//     Install emscripten: http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html
-//
-// Build:
-//     emcc -std=c++11 hello_triangle_minimal.cpp -s USE_SDL=2 -s FULL_ES2=1 -s WASM=1 -o ../hello_triangle_minimal.js
-//
-// Run:
-//     emrun hello_triangle_minimal.html
-//
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #include <SDL.h>
 #include <SDL_opengles2.h>
-#else
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengles2.h>
 #endif
 
 #include <iostream>
