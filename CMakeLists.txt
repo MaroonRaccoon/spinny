@@ -23,7 +23,7 @@ add_custom_command(
 
 # ---- main wasm & js target  ----
 add_executable(spinny_wasm
-    ${SRC_DIR}/hello_triangle_minimal.cpp
+    ${SRC_DIR}/spinny.cpp
 )
 set_target_properties(spinny_wasm
     PROPERTIES
