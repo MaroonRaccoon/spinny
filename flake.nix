@@ -27,8 +27,7 @@
         curl
 
         # dev environment (clangd)
-        clang-tools
-        llvm.clang
+        llvm.clang-unwrapped
         nodePackages.typescript-language-server
         nodePackages.vscode-langservers-extracted
         glsl_analyzer

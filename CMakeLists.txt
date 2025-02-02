@@ -6,7 +6,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(OUTPUT_DIR ${CMAKE_BINARY_DIR}/out)
-set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+set(BUILD_DIR ${CMAKE_BINARY_DIR})
+set(PROJECT_ROOT_DIR ${CMAKE_SOURCE_DIR})
+set(SRC_DIR ${PROJECT_ROOT_DIR}/src)
 
 # ---- main html target ----
 add_custom_command(
@@ -14,35 +16,36 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy ${SRC_DIR}/spinny.html ${OUTPUT_DIR}/spinny.html
     DEPENDS ${SRC_DIR}/spinny.html
 )
-add_custom_target(
-    spinny_html ALL # ALL: makes the ALL target depend on spinny_html to ensure spinny_html is built
-    DEPENDS spinny.html
-)
+#add_custom_target(
+#    spinny_html ALL # ALL: makes the ALL target depend on spinny_html to ensure spinny_html is built
+#    DEPENDS spinny.html
+#)
 
 # ---- main wasm & js target  ----
-add_executable(spinny
+add_executable(spinny_wasm
     ${SRC_DIR}/hello_triangle_minimal.cpp
 )
-set_target_properties(spinny
+set_target_properties(spinny_wasm
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}
 )
-set_property(TARGET spinny 
+set_property(TARGET spinny_wasm 
     PROPERTY LINK_DEPENDS
         ${CMAKE_SOURCE_DIR}/res/shaders/hello_triangle.vert
         ${CMAKE_SOURCE_DIR}/res/shaders/hello_triangle.frag
 )
 
-target_compile_options(spinny PRIVATE
+target_compile_options(spinny_wasm PRIVATE
     "-sUSE_SDL=2"
 )
-target_link_options(spinny PRIVATE
+target_link_options(spinny_wasm PRIVATE
     --embed-file ${CMAKE_SOURCE_DIR}/res@res
     -sNO_DISABLE_EXCEPTION_CATCHING
     -sUSE_SDL=2
 )
 
-message("\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! cmake_cxx_compiler: ${CMAKE_CXX_COMPILER}\n\n")
+# ---- spinny target ----
+add_custom_target(spinny ALL DEPENDS spinny_wasm spinny.html)
 
 # ---- fix the compile commands from em++ ----
 set(CLANGD_FILE ${CMAKE_BINARY_DIR}/clangd)
@@ -62,17 +65,10 @@ else()
     file(WRITE ${CLANGD_FILE} "")
 endif()
 
-## ---- fix the compile commands from em++ ----
-#execute_process(COMMAND ${CMAKE_CXX_COMPILER} -sUSE_SDL=2 --cflags
-#    OUTPUT_VARIABLE EM_CFLAGS
-#    COMMAND_ERROR_IS_FATAL ANY
-#)
-#string(STRIP "${EM_CFLAGS}" EM_CFLAGS)
-#
-#find_package(Python3 REQUIRED)
-#message("Python: ${Python3_EXECUTABLE}")
-#set(ENV{EXTRA_FLAGS} "${EM_CFLAGS}")
-#execute_process(
-#    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/fix_compile_commands.py
-#    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-#)
+# ---- clangd compile commands & config target ----
+add_custom_target(spinny_clangd
+    COMMAND ${CMAKE_COMMAND} -E copy ${BUILD_DIR}/clangd ${PROJECT_ROOT_DIR}/.clangd
+    COMMAND ${CMAKE_COMMAND} -E copy ${BUILD_DIR}/compile_commands.json ${PROJECT_ROOT_DIR}/compile_commands.json
+    DEPENDS spinny
+)
+add_custom_target(develop DEPENDS spinny_clangd)
