@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(spinny VERSION 1.0 LANGUAGES CXX)
+project(spinny_app VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
@@ -22,30 +22,31 @@ add_custom_command(
 #)
 
 # ---- main wasm & js target  ----
-add_executable(spinny_wasm
+add_executable(spinny
     ${SRC_DIR}/spinny.cpp
+    ${SRC_DIR}/graphics.cpp
 )
-set_target_properties(spinny_wasm
+set_target_properties(spinny
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}
 )
-set_property(TARGET spinny_wasm 
+set_property(TARGET spinny 
     PROPERTY LINK_DEPENDS
         ${CMAKE_SOURCE_DIR}/res/shaders/hello_triangle.vert
         ${CMAKE_SOURCE_DIR}/res/shaders/hello_triangle.frag
 )
 
-target_compile_options(spinny_wasm PRIVATE
+target_compile_options(spinny PRIVATE
     "-sUSE_SDL=2"
 )
-target_link_options(spinny_wasm PRIVATE
+target_link_options(spinny PRIVATE
     --embed-file ${CMAKE_SOURCE_DIR}/res@res
     -sNO_DISABLE_EXCEPTION_CATCHING
     -sUSE_SDL=2
 )
 
 # ---- spinny target ----
-add_custom_target(spinny ALL DEPENDS spinny_wasm spinny.html)
+add_custom_target(spinny_app ALL DEPENDS spinny spinny.html)
 
 # ---- fix the compile commands from em++ ----
 set(CLANGD_FILE ${CMAKE_BINARY_DIR}/clangd)
@@ -69,6 +70,6 @@ endif()
 add_custom_target(spinny_clangd
     COMMAND ${CMAKE_COMMAND} -E copy ${BUILD_DIR}/clangd ${PROJECT_ROOT_DIR}/.clangd
     COMMAND ${CMAKE_COMMAND} -E copy ${BUILD_DIR}/compile_commands.json ${PROJECT_ROOT_DIR}/compile_commands.json
-    DEPENDS spinny
+    DEPENDS spinny_app
 )
 add_custom_target(develop DEPENDS spinny_clangd)
