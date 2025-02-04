@@ -25,6 +25,7 @@ add_custom_command(
 add_executable(spinny
     ${SRC_DIR}/spinny.cpp
     ${SRC_DIR}/graphics.cpp
+    ${SRC_DIR}/window.cpp
 )
 set_target_properties(spinny
     PROPERTIES
@@ -34,6 +35,10 @@ set_property(TARGET spinny
     PROPERTY LINK_DEPENDS
         ${CMAKE_SOURCE_DIR}/res/shaders/hello_triangle.vert
         ${CMAKE_SOURCE_DIR}/res/shaders/hello_triangle.frag
+)
+
+target_include_directories(spinny PRIVATE
+    $ENV{GLM_PATH}/include
 )
 
 target_compile_options(spinny PRIVATE

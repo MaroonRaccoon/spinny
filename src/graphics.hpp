@@ -6,11 +6,13 @@
 #include <emscripten.h>
 #endif
 
+#include "window.hpp"
+
 namespace gfx
 {
 
 GLuint initShader();
 void   initGeometry( GLuint shaderProgram );
-void   render( SDL_Window *window );
+void   render( gfx::Window *window );
 
 } // namespace gfx

@@ -35,12 +35,14 @@
         # libraries
         glibc_multi
         SDL2
+        glm
 
         # python for gdb script
         python3
       ];
       packageParams = {
         nativeBuildInputs = buildInputs;
+        inherit buildInputs;
         src = ./.;
       };
       setEnvVariables = ''
@@ -50,6 +52,9 @@
         export EMCC_LOCAL_PORTS="sdl2=${inputs.sdl}"
 
         rm -rf EM_CACHE
+
+        export GLM_PATH=${pkgs.glm}
+        export glm_DIR=${pkgs.glm}/share/glm
       '';
     in
     {

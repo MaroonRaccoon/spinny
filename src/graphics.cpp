@@ -1,4 +1,5 @@
 #include "graphics.hpp"
+#include "window.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -70,9 +71,9 @@ void gfx::initGeometry( GLuint shaderProgram )
     glVertexAttribPointer( posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0 );
 }
 
-void gfx::render( SDL_Window *window )
+void gfx::render( gfx::Window *window )
 {
     glClear( GL_COLOR_BUFFER_BIT );
     glDrawArrays( GL_TRIANGLES, 0, 3 );
-    SDL_GL_SwapWindow( window );
+    window->swap();
 }
