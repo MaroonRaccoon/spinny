@@ -26,6 +26,7 @@ add_executable(spinny
     ${SRC_DIR}/spinny.cpp
     ${SRC_DIR}/graphics.cpp
     ${SRC_DIR}/window.cpp
+    ${SRC_DIR}/game.cpp
 )
 set_target_properties(spinny
     PROPERTIES

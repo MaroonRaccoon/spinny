@@ -5,6 +5,12 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <glm/matrix.hpp>
+#include <glm/trigonometric.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+static GLuint shaderId;
 
 std::string readFile( std::string path )
 {
@@ -52,6 +58,7 @@ GLuint gfx::initShader()
     glAttachShader( shaderProgram, fragmentShader );
     glLinkProgram( shaderProgram );
     glUseProgram( shaderProgram );
+    shaderId = shaderProgram;
 
     return shaderProgram;
 }
@@ -71,9 +78,17 @@ void gfx::initGeometry( GLuint shaderProgram )
     glVertexAttribPointer( posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0 );
 }
 
-void gfx::render( gfx::Window *window )
+void gfx::render( Game &game, gfx::Window &window )
 {
     glClear( GL_COLOR_BUFFER_BIT );
+
+    auto zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+    glm::mat4 transform = glm::mat4(1.0f);
+    transform = glm::rotate(transform, glm::radians(game.angleDegrees), zAxis);
+
+    GLuint transformLoc = glGetUniformLocation(shaderId, "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+
     glDrawArrays( GL_TRIANGLES, 0, 3 );
-    window->swap();
+    window.swap();
 }

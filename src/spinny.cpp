@@ -7,18 +7,29 @@
 #endif
 
 #include <iostream>
+#include <chrono>
 
 #include "graphics.hpp"
 #include "window.hpp"
+#include "game.hpp"
 
-void mainLoop( gfx::Window *window )
+struct LoopArg
 {
-    gfx::render( window );
+    Game &game;
+    gfx::Window &window;
+};
+
+void mainLoop( Game &game, gfx::Window &window )
+{
+    float angleDegrees;
+    game.tick(1);
+    gfx::render( game, window );
 }
 
-void mainLoopWrapper( void *window )
+void mainLoopWrapper( void *arg )
 {
-    mainLoop( static_cast< gfx::Window * >( window ) );
+    LoopArg *loopArg = static_cast< LoopArg * >(arg);
+    mainLoop( loopArg->game, loopArg->window );
 }
 
 int main( int argc, char **argv )
@@ -40,8 +51,11 @@ int main( int argc, char **argv )
     GLuint shaderProgram = gfx::initShader();
     gfx::initGeometry( shaderProgram );
 
+    Game game;
+    LoopArg loopArg(game, window);
+
     int fps = 0; // Use browser's requestAnimationFrame
-    emscripten_set_main_loop_arg( mainLoopWrapper, &window, fps, true );
+    emscripten_set_main_loop_arg( mainLoopWrapper, &loopArg, fps, true );
 
     return 0;
 }

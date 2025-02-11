@@ -7,12 +7,13 @@
 #endif
 
 #include "window.hpp"
+#include "game.hpp"
 
 namespace gfx
 {
 
 GLuint initShader();
 void   initGeometry( GLuint shaderProgram );
-void   render( gfx::Window *window );
+void   render( Game &game, gfx::Window &window );
 
 } // namespace gfx
