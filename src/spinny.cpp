@@ -12,6 +12,7 @@
 #include "graphics.hpp"
 #include "window.hpp"
 #include "game.hpp"
+#include "constants.hpp"
 
 struct LoopArg
 {
@@ -22,7 +23,7 @@ struct LoopArg
 void mainLoop( Game &game, gfx::Window &window )
 {
     float angleDegrees;
-    game.tick(1);
+    game.tick(1000.0f / global_constants::fps);
     gfx::render( game, window );
 }
 
@@ -54,8 +55,7 @@ int main( int argc, char **argv )
     Game game;
     LoopArg loopArg(game, window);
 
-    int fps = 0; // Use browser's requestAnimationFrame
-    emscripten_set_main_loop_arg( mainLoopWrapper, &loopArg, fps, true );
+    emscripten_set_main_loop_arg( mainLoopWrapper, &loopArg, global_constants::fps, true );
 
     return 0;
 }
